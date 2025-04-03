@@ -21,6 +21,14 @@ foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
     set_target_properties(${LIB_NAME} PROPERTIES
         OUTPUT_NAME ${LIB_NAME}
     )
+    # Link the library with all previously created libraries
+    foreach (PREV_LIB ${${PROJECT_NAME}_LIBS})
+        if (NOT "${PREV_LIB}" STREQUAL "${LIB_NAME}")
+            target_link_libraries(${LIB_NAME} PUBLIC ${PREV_LIB})
+        else()
+            break()
+        endif()
+    endforeach()
 
     # Testing
     file(GLOB_RECURSE ${LIB_NAME}_TEST_FILES ${${LIB_NAME}_TEST_DIR}/*.cpp) # Each .cpp file in the tests directory is a test

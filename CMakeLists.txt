@@ -12,7 +12,7 @@ project(epee
 )
 
 # Targets
-set(${PROJECT_NAME}_LIBS
+set(${PROJECT_NAME}_LIBS # Libraries. Every library will be linked to every library below it
     filesys
 )
 set(${PROJECT_NAME}_EXECS)
