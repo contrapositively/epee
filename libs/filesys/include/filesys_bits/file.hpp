@@ -40,11 +40,11 @@ public: // file class
         void load() { std::ifstream ifs(filepath, std::ios::binary); if (ifs)  fsys::read_var(ifs, this->_data);  loaded = true; }
         void save() const { std::ofstream ofs(filepath, std::ios::binary | std::ios::out); if (!ofs) { throw std::ios_base::failure("Failed to open file for writing: " + filepath); } fsys::write_var(ofs, this->_data); }
     public: // constructors
-        file(const std::string& path, const value_type& defaults)
+        file(const std::string& path, const value_type& defaults = value_type())
             : filepath(path), _data(defaults), default_values(defaults)
         {}
 
-        ~file() { if (loaded) save(); };
+        ~file() = default;
 
     public: // accessors and mutators
         template<size_t index>
@@ -62,7 +62,7 @@ public: // public members
     file read(std::string_view path) { return file(path, default_values); }
 public: // constructors
     filereader() = delete;
-    filereader(const value_type& defaults)
+    filereader(const value_type& defaults = value_type())
         : default_values(defaults)
     {}
 
