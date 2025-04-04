@@ -12,7 +12,7 @@
 namespace fsys
 {
     template <typename T> constexpr void write_var(std::ostream& os, const T& value) { os.write(reinterpret_cast<const char*>(&value), sizeof(T)); };
-    template <typename T> constexpr void read_var(std::istream& is, T& value) { is.read(reinterpret_cast<char*>(&value), sizeof(T)); };
+    template <typename T> constexpr void read_var(std::istream& is, T& value) { if (is.peek() == std::istream::traits_type::eof()) return; is.read(reinterpret_cast<char*>(&value), sizeof(T)); };
 
     template <typename T> constexpr void write_container(std::ostream& os, const T& container)
     {
@@ -70,5 +70,6 @@ namespace fsys
     template <typename... Args> constexpr void read_var(std::istream& is, std::tuple<Args...>& value) { std::apply([&is](auto&... args) { (read_var(is, args), ...); }, value); }
     
     constexpr void write_var(std::ostream& os, const std::string& value) { write_container(os, value); };
+    constexpr void write_var(std::ostream& os, const std::string_view& value) { write_container(os, value); };
     constexpr void read_var(std::istream& is, std::string& value) { read_container(is, value); };
 } // namespace fsys
