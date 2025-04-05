@@ -52,7 +52,7 @@ public: // accessors and mutators
         return std::get<index>(this->_data);
     }
     template<size_t index>
-    constexpr const auto &at(size_t index) const return at<index>();
+    constexpr const auto &at() const {return at<index>();};
 
     constexpr auto &data() { if constexpr (value_count == 1) return std::get<0>(this->_data); else return this->_data; }
     constexpr const auto &data() const { return this->data(); }

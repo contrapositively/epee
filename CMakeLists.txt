@@ -11,11 +11,21 @@ project(epee
     LANGUAGES CXX
 )
 
+# External dependencies
+set(${PROJECT_NAME}_EXTERNALS
+    frozen
+)
+set(${PROJECT_NAME}_EXTERNAL_LIBS
+    frozen::frozen
+)
+
 # Targets
 set(${PROJECT_NAME}_LIBS # Libraries. Every library will be linked to every library below it
     filesys
+    console
 )
-set(${PROJECT_NAME}_EXECS)
+set(${PROJECT_NAME}_EXECS
+)
 set(${PROJECT_NAME}_TESTS)
 
 # Output directories
@@ -27,6 +37,14 @@ set(CMAKE_TEST_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/tests)
 # Ctest
 include(CTest)
 enable_testing()
+
+foreach(EXTERNAL ${${PROJECT_NAME}_EXTERNALS})
+    find_package(${EXTERNAL} REQUIRED)
+    if (NOT ${EXTERNAL}_FOUND)
+        message(FATAL_ERROR "Could not find ${EXTERNAL}")
+    endif()
+    message(STATUS "Found ${EXTERNAL}: ${${EXTERNAL}_DIR}")
+endforeach()
 
 add_subdirectory(libs)
 add_subdirectory(src)
@@ -51,6 +69,9 @@ add_compile_definitions(
     PROJECT_NAME="${PROJECT_NAME}"
     PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION}"
     PROJECT_VERSION="${PROJECT_VERSION}"
+    PROJECT_VERSION_MAJOR="${PROJECT_VERSION_MAJOR}"
+    PROJECT_VERSION_MINOR="${PROJECT_VERSION_MINOR}"
+    PROJECT_VERSION_PATCH="${PROJECT_VERSION_PATCH}"
 
     PROJECT_SOURCE_DIR="${CMAKE_SOURCE_DIR}"
     PROJECT_BINARY_DIR="${CMAKE_BINARY_DIR}"

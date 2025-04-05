@@ -20,7 +20,15 @@ struct updater
     
     struct change
     {
-        version vsn;
+        #ifdef VERSION
+        version vsn = version(VERSION);
+        #else
+        #ifdef VERSION_MAJOR
+        version vsn = {VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH};
+        #else
+        version vsn = {0, 0, 0};
+        #endif
+        #endif
 
         /// @brief The data transfer map. Indexed by the new file data index, and the value is the old file data index.
         std::vector<std::pair<size_t, size_t>> data_transfer;

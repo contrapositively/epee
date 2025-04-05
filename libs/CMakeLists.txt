@@ -1,21 +1,16 @@
 foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
-    message(STATUS "Configuring library ${LIB_NAME}")
     set(${LIB_NAME}_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME})
     set(${LIB_NAME}_SOURCE_DIR ${${LIB_NAME}_DIR}/src)
     set(${LIB_NAME}_INCLUDE_DIR ${${LIB_NAME}_DIR}/include)
     set(${LIB_NAME}_TEST_DIR ${${LIB_NAME}_DIR}/tests)
     file(GLOB_RECURSE ${LIB_NAME}_SOURCES ${${LIB_NAME}_SOURCE_DIR}/*.cpp)
 
-    if (${LIB_NAME}_SOURCES) # If there are source files, create a normal library
-        add_library(${LIB_NAME} ${${LIB_NAME}_SOURCES})
-        target_include_directories(${LIB_NAME}
-            PUBLIC ${${LIB_NAME}_INCLUDE_DIR}
-            PRIVATE ${${LIB_NAME}_INCLUDE_DIR}/${LIB_NAME}_bits/
-        )
-    else() # If there are no source files, create a header-only library
-        add_library(${LIB_NAME} INTERFACE)
-        target_include_directories(${LIB_NAME} INTERFACE ${${LIB_NAME}_INCLUDE_DIR})
-    endif()
+    message(STATUS "Adding library ${LIB_NAME}")
+    add_library(${LIB_NAME} STATIC ${${LIB_NAME}_SOURCES})
+    target_include_directories(${LIB_NAME}
+        PUBLIC ${${LIB_NAME}_INCLUDE_DIR}
+        PRIVATE ${${LIB_NAME}_INCLUDE_DIR}/${LIB_NAME}_bits/
+    )
 
     # Set the output directory for the library
     set_target_properties(${LIB_NAME} PROPERTIES
@@ -27,6 +22,16 @@ foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
             target_link_libraries(${LIB_NAME} PUBLIC ${PREV_LIB})
         else()
             break()
+        endif()
+    endforeach()
+
+    # Link the library with all external libraries
+    foreach (EXTERNAL ${${PROJECT_NAME}_EXTERNAL_LIBS})
+        get_target_property(EXTERNAL_TYPE ${EXTERNAL} TYPE)
+        if (${EXTERNAL_TYPE} STREQUAL "INTERFACE_LIBRARY")
+            target_link_libraries(${LIB_NAME} INTERFACE ${EXTERNAL})
+        else()
+            target_link_libraries(${LIB_NAME} PUBLIC ${EXTERNAL})
         endif()
     endforeach()
 
