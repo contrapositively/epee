@@ -22,7 +22,6 @@ set(${PROJECT_NAME}_EXTERNAL_LIBS
 # Targets
 set(${PROJECT_NAME}_LIBS # Libraries. Every library will be linked to every library below it
     filesys
-    console
 )
 set(${PROJECT_NAME}_EXECS
 )
