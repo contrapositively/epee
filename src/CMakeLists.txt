@@ -12,7 +12,7 @@ foreach(EXEC_NAME ${${PROJECT_NAME}_EXECS})
     )
     
     # Link the library with all previously created libraries
-    foreach (LIB ${${PROJECT_NAME}_LIBS})
+    foreach (LIB ${${PROJECT_NAME}_LIBS} ${${PROJECT_NAME}_LIB_LIBS})
         get_target_property(LIB_TYPE ${LIB} TYPE)
         if (${LIB_TYPE} STREQUAL "INTERFACE_LIBRARY")
             target_link_libraries(${EXEC_NAME} INTERFACE ${LIB})

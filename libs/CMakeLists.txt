@@ -1,3 +1,5 @@
+add_subdirectory(libs)
+
 foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
     set(${LIB_NAME}_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME})
     set(${LIB_NAME}_SOURCE_DIR ${${LIB_NAME}_DIR}/src)
@@ -16,13 +18,9 @@ foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
     set_target_properties(${LIB_NAME} PROPERTIES
         OUTPUT_NAME ${LIB_NAME}
     )
-    # Link the library with all previously created libraries
-    foreach (PREV_LIB ${${PROJECT_NAME}_LIBS})
-        if (NOT "${PREV_LIB}" STREQUAL "${LIB_NAME}")
-            target_link_libraries(${LIB_NAME} PUBLIC ${PREV_LIB})
-        else()
-            break()
-        endif()
+    # Link the library with all needed libraries
+    foreach (LIB_LIB ${${PROJECT_NAME}_LIB_LIBS})
+        target_link_libraries(${LIB_NAME} PUBLIC ${LIB_LIB})
     endforeach()
 
     # Link the library with all external libraries

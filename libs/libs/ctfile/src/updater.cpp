@@ -1,6 +1,6 @@
 #include "updater.hpp"
 
-using namespace fsys;
+using namespace ctfl;
 
 std::unordered_map<size_t, size_t> updater::get_mapping(const version &old_version, const version &new_version)
 {
@@ -61,7 +61,7 @@ updater::updater(const std::string_view & path)
     }
 }
 
-fsys::updater::updater(const file_t::data_t &data)
+ctfl::updater::updater(const file_t::data_t &data)
     : changes(std::get<0>(data).size())
 {
     for (const auto& change : std::get<0>(data))

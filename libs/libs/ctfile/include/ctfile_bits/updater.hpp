@@ -5,7 +5,7 @@
 
 #include <unordered_map>
 
-namespace fsys
+namespace ctfl
 {
 struct updater
 {
@@ -50,4 +50,4 @@ struct updater
 
     void save(const std::string_view & path) { file_t file(path, package()); file.save(); }
 }; // class updater
-} // namespace fsys
+} // namespace ctfl

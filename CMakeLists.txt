@@ -20,8 +20,10 @@ set(${PROJECT_NAME}_EXTERNAL_LIBS
 )
 
 # Targets
-set(${PROJECT_NAME}_LIBS # Libraries. Every library will be linked to every library below it
-    filesys
+set(${PROJECT_NAME}_LIBS # Libraries.
+)
+set(${PROJECT_NAME}_LIB_LIBS # Llibraries that are used by other libraries
+    ctfile
     dice
 )
 set(${PROJECT_NAME}_EXECS

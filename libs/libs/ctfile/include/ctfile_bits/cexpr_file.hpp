@@ -11,7 +11,7 @@
 #include <cassert>
 #include <type_traits>
 
-namespace fsys
+namespace ctfl
 {
 template<typename... Ts>
 class cexpr_file {
@@ -31,9 +31,9 @@ public: // public methods
     constexpr bool is_loaded() const { return loaded; }
     constexpr void clear() { loaded = false; this->_data = default_values; }
 
-    void load() { std::ifstream ifs(filepath, std::ios::binary); if (ifs)  fsys::read_var(ifs, this->_data);  loaded = true; }
+    void load() { std::ifstream ifs(filepath, std::ios::binary); if (ifs)  ctfl::read_var(ifs, this->_data);  loaded = true; }
     constexpr void check_load() { if (!loaded) { load(); } }
-    void save() const { std::ofstream ofs(filepath, std::ios::binary | std::ios::out); if (!ofs) { throw std::ios_base::failure("Failed to open file for writing: " + filepath); } fsys::write_var(ofs, this->_data); }
+    void save() const { std::ofstream ofs(filepath, std::ios::binary | std::ios::out); if (!ofs) { throw std::ios_base::failure("Failed to open file for writing: " + filepath); } ctfl::write_var(ofs, this->_data); }
 public: // constructors
     cexpr_file(const std::string_view& path, const data_t& values = data_t(), const data_t& defaults = data_t())
         : filepath(std::string(path)), _data(values), default_values(defaults)
@@ -57,4 +57,4 @@ public: // accessors and mutators
     constexpr auto &data() { if constexpr (value_count == 1) return std::get<0>(this->_data); else return this->_data; }
     constexpr const auto &data() const { return this->data(); }
 }; // class cexpr_file
-} // namespace fsys
+} // namespace ctfl

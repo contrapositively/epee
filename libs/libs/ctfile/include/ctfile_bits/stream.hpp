@@ -9,7 +9,7 @@
 #include <unordered_map>
 
 
-namespace fsys
+namespace ctfl
 {
     template <typename T> constexpr void write_var(std::ostream& os, const T& value);
     template <typename T> constexpr void read_var(std::istream& is, T& value);
@@ -31,9 +31,9 @@ namespace fsys
             read_var(is, value);
         };
     }
-} // namespace fsys
+} // namespace ctfl
 
-namespace fsys
+namespace ctfl
 {
     template <typename T> constexpr void write_var(std::ostream& os, const T& value) { os.write((const char*)(&value), sizeof(T)); };
     template <typename T> constexpr void read_var(std::istream& is, T& value) { if (is.peek() == std::istream::traits_type::eof()) return; is.read((char*)(&value), sizeof(T)); };
@@ -99,4 +99,4 @@ namespace fsys
         value.resize(size);
         for (size_t i = 0; i < size; ++i) value[i] = (byte_vector[i / 8] >> (i % 8)) & 1;
     };
-} // namespace fsys
+} // namespace ctfl
