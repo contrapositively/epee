@@ -21,14 +21,9 @@ set(${PROJECT_NAME}_EXTERNAL_LIBS
 
 # Targets
 set(${PROJECT_NAME}_LIBS # Libraries.
-)
-set(${PROJECT_NAME}_LIB_LIBS # Llibraries that are used by other libraries
     ctfile
     dice
 )
-set(${PROJECT_NAME}_EXECS
-)
-set(${PROJECT_NAME}_TESTS)
 
 # Output directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -49,15 +44,14 @@ foreach(EXTERNAL ${${PROJECT_NAME}_EXTERNALS})
 endforeach()
 
 add_subdirectory(libs)
-add_subdirectory(src)
-add_subdirectory(tests)
-
 
 # Global compile options
 add_compile_options(
-    $<$<CONFIG:Debug>:-g -O0>
+    $<$<CONFIG:Debug>:-g>
+    $<$<CONFIG:Debug>:-O0>
     $<$<CONFIG:Release>:-O3>
-    $<$<CONFIG:RelWithDebInfo>:-O2 -g>
+    $<$<CONFIG:RelWithDebInfo>:-O2>
+    $<$<CONFIG:RelWithDebInfo>:-g>
     $<$<CONFIG:MinSizeRel>:-Os>
 )
 
@@ -94,4 +88,14 @@ set_target_properties(
 
     CXX_COMPILER ${CMAKE_CXX_COMPILER}
     OPERATING_SYSTEM ${CMAKE_SYSTEM_NAME}
+)
+
+
+file(GLOB_RECURSE ${PROJECT_NAME}_EXEC_SOURCES src/*.cpp)
+file(GLOB_RECURSE ${PROJECT_NAME}_EXEC_HEADERS src/*.hpp)
+add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_EXEC_SOURCES} ${${PROJECT_NAME}_EXEC_HEADERS})
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+    ${${PROJECT_NAME}_LIBS}
+    ${${PROJECT_NAME}_EXTERNAL_LIBS} 
 )

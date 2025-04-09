@@ -1,12 +1,13 @@
 import numpy as np
+import math
 from collections import Counter
 import os
 import matplotlib.pyplot as plt
 import multiprocessing as mp
 
-dice_per_sim = 3
-sim_count = 100000
-aug_multiplicity = 1
+dice_per_sim = 4
+sim_count = 10000
+aug_multiplicity = 4
 hist_bins = np.arange(dice_per_sim, dice_per_sim * 6 + 2) - 0.5 # Create bins centered on integers
 
 def plot(data, label):
@@ -63,7 +64,7 @@ class monte:
         self.func = func
         self.title = title
         self.filename = filename
-    
+
     def run(self, strength=None):
         global aug_multiplicity
         if strength is None:
@@ -74,7 +75,7 @@ class monte:
         pool.join()
         # self.results = [self.func(strength) for _ in range(sim_count)]
         return self
-    
+
     def plot(self):
         plot(self.results, label =self.label)
         return self
@@ -109,7 +110,7 @@ def run_all_sims():
     plt.close()
     plt.clf()
     return
-    
+
 def cut_drop_spec_slice(strength):
     monte(cut_sim, "Cut "+str(strength), 'Sum of '+str(dice_per_sim)+' Dice Rolls Cutting ' +str(aug_multiplicity), 'cut_monte').run(strength).plot()
     monte(drop_sim, "Drop "+str(strength), 'Sum of '+str(dice_per_sim)+' Dice Rolls Dropping ' +str(aug_multiplicity), 'drop_monte').run(strength).plot()
@@ -122,7 +123,7 @@ def cut_drop_spec():
     monte(sum_sim, "None", 'Sum of '+str(dice_per_sim)+' Dice Rolls', 'sum_monte').run().plot()
     for i in partitions:
         cut_drop_spec_slice(i)
-    
+
     configure_hist()
     plt.title('Simulation of '+str(dice_per_sim)+' Dice Rolls, Showing Cut and Drop Strength Spectrums')
     plt.savefig('monte/'+str(dice_per_sim)+'_monte_spec')
@@ -152,20 +153,23 @@ def drop_cut_ratio_rel():
     ratios = [(cut_strength, drop_strength) for cut_strength in range(0, ratio_limit) 
               for drop_strength in range(cut_strength + 1, ratio_limit + 1)]
     coefficients = range(aug_multiplicity+1)
+    plt.figure(figsize=(10, 6))
     for cut_strength, drop_strength in ratios:
+        if (math.gcd(cut_strength, drop_strength) != 1):
+            continue
         ratio_string = "C/D "+str(cut_strength) + ":" + str(drop_strength)
+        print(ratio_string)
         partitions = [(cut_strength*c, drop_strength*c) for c in coefficients]
         montes = map(lambda x: monte(cut_drop_sim, label="Cut"+str(x[0])+" Drop"+str(x[1])).run(x), partitions)
         means = [np.mean(m.results) for m in montes]
         plt.plot(coefficients, means, marker='o', label=ratio_string)
-    plt.figure(figsize=(10, 6))
     plt.xlabel('Coefficient')
     plt.ylabel('Mean Value')
     plt.title('Mean Value vs Coefficient for Cut/Drop Simulation ('+str(dice_per_sim)+' Dice)')
     plt.legend()
     plt.grid()
-    plt.savefig('monte/'+str(dice_per_sim)+'cut_drop_ratio_rel')
     plt.show()
+    plt.savefig('monte/'+str(dice_per_sim)+'cut_drop_ratio_rel')
     plt.close()
     plt.clf()
     return
@@ -173,7 +177,7 @@ def drop_cut_ratio_rel():
 if __name__ == "__main__":
     if not os.path.exists('monte'):
         os.makedirs('monte')
-    run_all_sims()
+    # run_all_sims()
     # cut_drop_spec()
     # drop_strength_rel()
-    # drop_cut_ratio_rel()
+    drop_cut_ratio_rel()

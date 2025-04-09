@@ -1,5 +1,3 @@
-add_subdirectory(libs)
-
 foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
     set(${LIB_NAME}_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${LIB_NAME})
     set(${LIB_NAME}_SOURCE_DIR ${${LIB_NAME}_DIR}/src)
@@ -18,10 +16,6 @@ foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
     set_target_properties(${LIB_NAME} PROPERTIES
         OUTPUT_NAME ${LIB_NAME}
     )
-    # Link the library with all needed libraries
-    foreach (LIB_LIB ${${PROJECT_NAME}_LIB_LIBS})
-        target_link_libraries(${LIB_NAME} PUBLIC ${LIB_LIB})
-    endforeach()
 
     # Link the library with all external libraries
     foreach (EXTERNAL ${${PROJECT_NAME}_EXTERNAL_LIBS})
@@ -40,12 +34,6 @@ foreach (LIB_NAME ${${PROJECT_NAME}_LIBS})
         string(REPLACE ${${LIB_NAME}_TEST_DIR}/ "" TEST_NAME ${TEST_NAME}) # Strip the library test directory
         set(TEST_NAME ${LIB_NAME}_${TEST_NAME}) # Prepend the library name to the test name
 
-        add_executable(${TEST_NAME} ${TEST_FILE}) # Create an executable for the test
-        target_link_libraries(${TEST_NAME} ${LIB_NAME}) # Link the library to the test
-        set_target_properties(${TEST_NAME} PROPERTIES
-            OUTPUT_NAME ${TEST_NAME}
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_TEST_OUTPUT_DIRECTORY}/${LIB_NAME}
-        )
         add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME}) # Add the test to CTest
         set_tests_properties(${TEST_NAME} PROPERTIES
             LABELS ${LIB_NAME} # Set the label for the test
