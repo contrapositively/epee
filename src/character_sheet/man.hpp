@@ -8,10 +8,14 @@ namespace csheet
     class sheet_manager
     {
         public:
+            static const std::string PATH;
+        public:
             typedef unsigned int sheet_id;
             typedef struct {
-                std::string sheet_name, game_name;
+                std::string sheet_name;
             } sheet_t;
-            const std::unordered_map<sheet_id, sheet_t> &get_sheet_list() const;
+            typedef std::unordered_map<sheet_id, sheet_t> sheet_list_t;
+        public:
+            static const std::unordered_map<sheet_id, sheet_t> &get_sheet_list();
     };
 }
