@@ -29,6 +29,7 @@
 .idea/
 *.code-workspace
 .ccls-cache/
+compile_commands.json
 
 # Logs and temporary files
 *.log
@@ -36,7 +37,6 @@
 *.temp
 *.swp
 *.swo
-compile_commands.json
 
 # CMake generated files
 CMakeFiles/

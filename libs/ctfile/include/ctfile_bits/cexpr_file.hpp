@@ -32,8 +32,9 @@ public: // public methods
     constexpr void clear() { loaded = false; this->_data = default_values; }
 
     void load() { std::ifstream ifs(filepath, std::ios::binary); if (ifs)  ctfl::read_var(ifs, this->_data);  loaded = true; }
-    constexpr void check_load() { if (!loaded) { load(); } }
+    constexpr bool ensure_loaded() { if (!loaded) { load(); return true; } return false; }
     void save() const { std::ofstream ofs(filepath, std::ios::binary | std::ios::out); if (!ofs) { throw std::ios_base::failure("Failed to open file for writing: " + filepath); } ctfl::write_var(ofs, this->_data); }
+    constexpr bool save_if_loaded() const { if (loaded) { save(); return true; } return false; }
 public: // constructors
     cexpr_file(const std::string_view& path, const data_t& values = data_t(), const data_t& defaults = data_t())
         : filepath(std::string(path)), _data(values), default_values(defaults)
