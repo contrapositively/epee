@@ -48,12 +48,13 @@ public: // constructors
 
 public: // accessors and mutators
     template<size_t index>
-    constexpr auto &at() {
-        static_assert(index < value_count, "Index out of range");
-        return std::get<index>(this->_data);
-    }
+    constexpr auto &at() { return std::get<index>(this->_data); }
     template<size_t index>
     constexpr const auto &at() const {return at<index>();};
+    template<typename T>
+        constexpr auto & get() { return std::get<T>(this->_data); }
+    template<typename T>
+        constexpr const auto &get() const { return this->get<T>(); }
 
     constexpr auto &data() { if constexpr (value_count == 1) return std::get<0>(this->_data); else return this->_data; }
     constexpr const auto &data() const { return this->data(); }

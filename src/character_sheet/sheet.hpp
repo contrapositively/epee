@@ -13,21 +13,24 @@ namespace csheet
             void *pimpl; // A pointer to the file data
         public: // sheet fields
             typedef unsigned short id_t;
+            static const std::string DEFAULT_TEXT_V;
             enum class text_id : id_t { name, description };
-            std::string &text(const text_id id);
-            const std::string &text(const text_id id) const { return this->text(id); };
+            std::string &text(const text_id id, const std::string_view &default_v = DEFAULT_TEXT_V);
+            const std::string &text(const text_id id, const std::string_view &default_v = DEFAULT_TEXT_V) const { return this->text(id); };
 
             typedef int stat_t;
+            static const stat_t DEFAULT_STAT_V;
             enum class stat_id : id_t { armor_value, shock_tolerance };
-            stat_t &stat(const stat_id id);
-            const stat_t &stat(const stat_id id) const { return this->stat(id); };
+            stat_t &stat(const stat_id id, const stat_t default_v = DEFAULT_STAT_V);
+            const stat_t &stat(const stat_id id, const stat_t default_v = DEFAULT_STAT_V) const { return this->stat(id); };
 
             typedef struct {
                 stat_t value, capacity;
             } resource_t;
+            static const resource_t DEFAULT_RESOURCE_V;
             enum class resource_id : id_t { mana, stamina, hit_points };
-            resource_t &resource(const resource_id id);
-            const resource_t &resource(const resource_id id) const { return this->resource(id); };
+            resource_t &resource(const resource_id id, const resource_t &default_v = DEFAULT_RESOURCE_V);
+            const resource_t &resource(const resource_id id, const resource_t &default_v = DEFAULT_RESOURCE_V) const { return this->resource(id); };
         public:
             enum class initialization : unsigned char { blank, example };
             sheet(void *_pimpl) : pimpl(_pimpl) {};

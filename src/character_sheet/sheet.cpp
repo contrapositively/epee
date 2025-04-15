@@ -111,15 +111,30 @@ sheet_list::~sheet_list()
 }
 
 
+const sheet::resource_t sheet::DEFAULT_RESOURCE_V = { 0, 0 };
+const sheet::stat_t sheet::DEFAULT_STAT_V = 0;
+const std::string sheet::DEFAULT_TEXT_V = "";
 
 sheet::sheet(const sheet::initialization initialization_mode)
 {}
 
-std::string &sheet::text(const sheet::text_id id)
-{}
+std::string &sheet::text(const sheet::text_id id, const std::string_view &default_v)
+{
+    std::unordered_map<text_id, std::string> &text_map = s_ref(pimpl).get<std::unordered_map<text_id, std::string>>();
+    if (text_map.find(id) != text_map.end()) { text_map[id] = default_v; };
+    return text_map[id];
+}
 
-sheet::stat_t &sheet::stat(const sheet::stat_id id)
-{}
+sheet::stat_t &sheet::stat(const sheet::stat_id id, const sheet::stat_t default_v)
+{
+    std::unordered_map<stat_id, stat_t> &stat_map = s_ref(pimpl).get<std::unordered_map<stat_id, stat_t>>();
+    if (stat_map.find(id) != stat_map.end()) { stat_map[id] = default_v; };
+    return stat_map[id];
+}
 
-sheet::resource_t &sheet::resource(const sheet::resource_id id)
-{}
+sheet::resource_t &sheet::resource(const sheet::resource_id id, const sheet::resource_t &default_v)
+{
+    std::unordered_map<resource_id, resource_t> &resource_map = s_ref(pimpl).get<std::unordered_map<resource_id, resource_t>>();
+    if (resource_map.find(id) != resource_map.end()) { resource_map[id] = default_v; };
+    return resource_map[id];
+}
